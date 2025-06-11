@@ -1,6 +1,7 @@
 # utils/one_off_chat.py
 import argparse
 import requests
+from keys import HF_API_KEY
 API_URL = "https://router.huggingface.co/cohere/compatibility/v1/chat/completions"
 # from keys import HF_API_KEY  # Import your Hugging Face API key
 
@@ -23,7 +24,6 @@ def get_response(prompt:str,api_key, model_name="command-r-plus-04-2024"):
     # Extract and return the generated text from the response
     # Handle any errors that might occur
     headers = {"Authorization": f"Bearer {api_key}"}  # Optional for some models
-
     payload = {
         'messages': [
             {'role': 'user', 'content': prompt}
@@ -35,7 +35,7 @@ def get_response(prompt:str,api_key, model_name="command-r-plus-04-2024"):
         response = response.json()
         return response['choices'][0]['message']['content']
     else:
-        print("Failed to get a valid response from the model.")
+        print("error", response.status_code, response.text)
         return None
     pass
 
@@ -60,7 +60,7 @@ def main():
     parser = argparse.ArgumentParser(description="Chat with an LLM")
     # TODO: Add arguments to the parser
     parser.add_argument('--prompt', type=str,default= '', help='Initial prompt to send to the model')
-    parser.add_argument('--key', type=str, required = True ,help='Hugging Face API key (required)')
+    parser.add_argument('--key', type=str, default= HF_API_KEY ,help='Hugging Face API key (required)')
     args = parser.parse_args()
     key = args.key
     prompt = args.prompt
@@ -77,3 +77,5 @@ def main():
 
 if __name__ == "__main__":
     main()
+   
+

@@ -3,13 +3,14 @@
 import os
 import csv
 from pathlib import Path
+from keys import HF_API_KEY  # Import your Hugging Face API key
 
 # Import our chat modules - since we're in the same directory
 from one_off_chat import get_response as get_one_off_response
 # Optionally import the conversation module if testing that too
 # from conversation import get_response as get_contextual_response
 
-def test_chat(questions, model_name="google/flan-t5-base", api_key=None):
+def test_chat(questions, model_name= 'command-r-plus-04-2024', api_key= HF_API_KEY):
     """
     Test the chat function with a list of questions
 
@@ -22,11 +23,13 @@ def test_chat(questions, model_name="google/flan-t5-base", api_key=None):
         A dictionary mapping questions to responses
     """
     results = {}
+    print(HF_API_KEY)
 
     for question in questions:
         print(f"Testing question: {question}")
+        assert type(question) == str, "Question must be a string"
         # Get response using the one-off chat function
-        response = get_one_off_response(question, model_name, api_key)
+        response = get_one_off_response(question, api_key, model_name=model_name)
         results[question] = response
 
     return results
